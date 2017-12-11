@@ -1,4 +1,4 @@
-import CausalityRedux from 'causality-redux'
+import causalityRedux from 'causality-redux'
 import MonitorComponent from './view'
 
 let setState, getState, wrappedComponents
@@ -53,7 +53,7 @@ const getStackTrace = () => {
 // Since state can go forward and back, this would affect the monitor negatively.
 // Hence, some data must be kept out of the redux store in order to keep the monitor stable.
 //
-const monitorMirroredState = CausalityRedux.merge({}, defaultState)
+const monitorMirroredState = causalityRedux.merge({}, defaultState)
 
 const MAXOBJSTRING = 23
 function toString (e) {
@@ -69,7 +69,7 @@ function discloseStates () {
   const data = []
   allStates.forEach(e => {
     let strObj = ''
-    CausalityRedux.getKeys(e.nextState).forEach(key => {
+    causalityRedux.getKeys(e.nextState).forEach(key => {
       if (e.nextState[key] !== e.prevState[key]) {
         if (strObj !== '') {
           strObj += ', '
@@ -94,7 +94,7 @@ function setMonitorState () {
 }
 
 function copyStoreState (position) {
-  CausalityRedux.copyState(allStates[position].store)
+  causalityRedux.copyState(allStates[position].store)
 }
 
 function replayStates () {
@@ -181,7 +181,7 @@ function setThisState () {
   const currentState = monitorMirroredState.currentState
   if (typeof history.setHistoryState === 'function') {
     const state = allStates[currentState].store
-    const stack = state[CausalityRedux.storeHistoryKey].stack
+    const stack = state[causalityRedux.storeHistoryKey].stack
     if (stack.length === 1 && history.length > 1) {
       alert('Not able to set to this state since it means the history current with > 1 entry must be set back to one entry which is not permitted in javascript.')
       return
@@ -219,7 +219,7 @@ const controllerFunctions = {
   closeDisplayModule
 }
 
-const ret = CausalityRedux.establishControllerConnections({
+const ret = causalityRedux.establishControllerConnections({
   module,
   partition: { partitionName: stateMonitorPartition, defaultState, controllerFunctions },
   uiComponent: MonitorComponent, // Redux connect will be called on this component and returned as uiComponent in the returned object.
@@ -233,7 +233,7 @@ const isCausalityReduxComponent = val =>
   typeof val === 'function' && val.prototype !== 'undefined' && typeof val.prototype.isCausalityReduxComponent !== 'undefined'
 
 const copyHotReloadedComponents = (partitionName, partition) => {
-  CausalityRedux.getKeys(partition).forEach(partitionKey => {
+  causalityRedux.getKeys(partition).forEach(partitionKey => {
     if (isCausalityReduxComponent(partition[partitionKey])) {
       allStates.forEach(entry => {
         if (typeof entry.store[partitionName][partitionKey] !== 'undefined') {
@@ -247,7 +247,7 @@ const copyHotReloadedComponents = (partitionName, partition) => {
 
 // First state
 const firstArg = {}
-firstArg.store = CausalityRedux.shallowCopyStorePartitions()
+firstArg.store = causalityRedux.shallowCopyStorePartitions()
 allStates.push(firstArg)
 setTimeout(discloseStates, 1)
 
@@ -255,25 +255,25 @@ function onStateChange (arg) {
   if (arg.partitionName !== stateMonitorPartition && monitorMirroredState.isDebugging) {
     setTimeout(stopDebug, 1)
   }
-  if (arg.partitionName !== stateMonitorPartition && arg.partitionName !== CausalityRedux.storeHistoryKey && arg.operation !== CausalityRedux.operations.STATE_FUNCTION_CALL) {
-    arg.store = CausalityRedux.shallowCopy(CausalityRedux.store.getState())
-    arg.nextState = CausalityRedux.shallowCopy(arg.nextState)
+  if (arg.partitionName !== stateMonitorPartition && arg.partitionName !== causalityRedux.storeHistoryKey && arg.operation !== causalityRedux.operations.STATE_FUNCTION_CALL) {
+    arg.store = causalityRedux.shallowCopy(causalityRedux.store.getState())
+    arg.nextState = causalityRedux.shallowCopy(arg.nextState)
     // Copy the hot reloaded components from arg.nextState down to the stores in the array.
     // This way set state at any index will have the newest hot reloaded components.
     copyHotReloadedComponents(arg.partitionName, arg.nextState)
 
     // Remove keys that are equal to the previous.
-    CausalityRedux.getKeys(arg.nextState).forEach(key => {
+    causalityRedux.getKeys(arg.nextState).forEach(key => {
       if (arg.nextState[key] === arg.prevState[key]) {
         delete arg.nextState[key]
       }
     })
 
     // Only record if changes to state happened that are not hot reloaded components.
-    if (CausalityRedux.getKeys(arg.nextState).length > 0) {
+    if (causalityRedux.getKeys(arg.nextState).length > 0) {
       arg.module = getStackTrace()
-      arg.store[arg.partitionName] = CausalityRedux.merge({}, arg.store[arg.partitionName], arg.nextState)
-      arg.store[CausalityRedux.storeVersionKey] = arg[CausalityRedux.storeVersionKey]
+      arg.store[arg.partitionName] = causalityRedux.merge({}, arg.store[arg.partitionName], arg.nextState)
+      arg.store[causalityRedux.storeVersionKey] = arg[causalityRedux.storeVersionKey]
       allStates.push(arg)
       setTimeout(discloseStates, 1)
     }
@@ -281,13 +281,13 @@ function onStateChange (arg) {
 }
 
 function onListener (arg) {
-  if (arg.partitionName !== stateMonitorPartition && arg.operation !== CausalityRedux.operations.STATE_FUNCTION_CALL) {
+  if (arg.partitionName !== stateMonitorPartition && arg.operation !== causalityRedux.operations.STATE_FUNCTION_CALL) {
     listeners.push(arg)
   }
 }
 
 if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'mochaTesting' && process.env.NODE_ENV !== 'mochaDebugTesting') {
-  CausalityRedux.setOptions({ onStateChange, onListener })
+  causalityRedux.setOptions({ onStateChange, onListener })
 }
 
 export default wrappedComponents.MonitorComponent
