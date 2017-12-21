@@ -86,7 +86,7 @@ class Clipboard extends React.Component {
   }
   render () {
     return (
-      <input type='text' defaultValue={this.props.clipBoard} id='myInput' />
+      <input type='text' defaultValue={this.props.defaultValue} id='myInput' />
     )
   }
 }
@@ -98,7 +98,7 @@ const DisplayStateDetail = props => {
   return (
     <div onClick={props.closeDisplayModule} className={styles.displayModuleContainerBackground}>
       <div onClick={(e) => { e.stopPropagation() }} className={styles.displayModuleContainer}>
-        <Clipboard {...props} />
+        <Clipboard defaultValue={props.clipBoard} />
         <div>
           <div className={styles.stateDetailTitle}>Display State Detail</div>
           <div title='Exit Display State.' onClick={props.closeDisplayModule} className={styles.transitionExitButton}>
