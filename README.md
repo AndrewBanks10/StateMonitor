@@ -16,7 +16,7 @@ import { StateMonitor, handleTSSourceMaps } from '../StateMonitor'
 // init time and also with each HMR.
 handleTSSourceMaps()
 
-// This exists in all caudality-redux projects.
+// The component MainApp exists in all causality-redux projects.
 const MainApp = () =>
   <div>
     <StateMonitor />
