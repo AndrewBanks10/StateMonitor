@@ -262,11 +262,6 @@ function onStateChange (arg) {
   if (monitorMirroredState.isDebugging) {
     return
   }
-  /*
-  if (arg.partitionName !== stateMonitorPartition && monitorMirroredState.isDebugging) {
-    setTimeout(stopDebug, 1)
-  }
-  */
   if (arg.partitionName !== stateMonitorPartition &&
     arg.partitionName !== causalityRedux.storeHistoryKey &&
     arg.operation !== causalityRedux.operations.STATE_FUNCTION_CALL) {
