@@ -9,7 +9,7 @@ For state changes made by causality-redux, it also allows you to display the lin
 Simply download it and place it in your source tree. Then include the component StateMonitor in your react tree. In production mode, the monitor is not displayed. See the examples below.
 ```javascript
 // Typescript project example.
-import { StateMonitor, handleTSSourceMaps } from '../StateMonitor/index'
+import { StateMonitor, handleTSSourceMaps } from '../StateMonitor'
 
 // Note that handleTSSourceMaps must be called for Typescript projects.
 // This file is HMR loaded on each change so this function is called at
@@ -27,7 +27,7 @@ const MainApp = () =>
 
 ```javascript
 // Javascript project example.
-import { StateMonitor } from '../StateMonitor/index'
+import { StateMonitor } from '../StateMonitor'
 
 const MainApp = () =>
   <div>
