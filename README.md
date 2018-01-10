@@ -38,3 +38,9 @@ const MainApp = () =>
 ```
 
 The monitor will default to off when tests are run or in production mode. In order to turn it off for any other case, set showMonitor to false in the file index.js.
+
+Consider using the vscode extension [cr-state-file-open] (https://github.com/AndrewBanks10/cr-state-file-open). This extension when used in conjunction eith the StateMonitor used used to pull up the source code and line number of the state change that you click on in the monitor. So, perform the following steps.
+1. Click on the state you want to see in the monitor.
+2. This displays information about the state change.
+2. Go to vscode and pull up the command palette and select 'react-causality-redux load file'.
+3. Vscode then pulls up the source file that caused the state change with the specific line number that performed the change highlighted.
