@@ -1,7 +1,7 @@
 import causalityRedux from 'causality-redux'
 import MonitorComponent from './view.jsx'
 import getStackTrace from './model'
-import { loadSourceMaps, mapModule } from './sourcemaps'
+import { loadSourceMaps, mapModule, setIsTypeScript } from './sourcemaps'
 
 let setState
 let getState
@@ -29,6 +29,8 @@ const defaultState = {
   nextState: {},
   clipBoard: ''
 }
+
+setIsTypeScript(causalityRedux.globalStore.partitionState.isTypescript)
 
 //
 // Since state can go forward and back, this would affect the monitor negatively.
