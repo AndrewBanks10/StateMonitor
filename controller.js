@@ -2,6 +2,7 @@ import causalityRedux from 'causality-redux'
 import MonitorComponent from './view.jsx'
 import getStackTrace from './model'
 import { loadSourceMaps, mapModule, setIsTypeScript } from './sourcemaps'
+import './hmrchangedmodules'
 
 let setState
 let getState
@@ -265,6 +266,22 @@ export const handleTSSourceMaps = () => {
   loadSourceMaps(handleTSSourceMapsComplete)
 }
 
+// If a module has been HMR loaded then any source on the stack is invalid.
+export const handleHMRLoadedModules = changedSourceModules => {
+  const len = allStates.length
+  for (let i = 0; i < len; ++i) {
+    if (typeof allStates[i].callStack !== 'undefined') {
+      allStates[i].callStack.forEach(stackEntry => {
+        if (stackEntry.moduleName && stackEntry.moduleName !== 'Unknown') {
+          if (changedSourceModules.some(e => stackEntry.moduleName === e)) {
+            stackEntry.moduleName = 'Unknown'
+          }
+        }
+      })
+    }
+  }
+}
+
 // First state
 const firstArg = {}
 firstArg.store = causalityRedux.shallowCopyStorePartitions()
@@ -275,11 +292,6 @@ function onStateChange (arg) {
   if (monitorMirroredState.isDebugging) {
     return
   }
-  /*
-  if (arg.partitionName !== stateMonitorPartition && monitorMirroredState.isDebugging) {
-    setTimeout(stopDebug, 1)
-  }
-  */
   if (arg.partitionName !== stateMonitorPartition &&
     arg.partitionName !== causalityRedux.storeHistoryKey &&
     arg.operation !== causalityRedux.operations.STATE_FUNCTION_CALL) {

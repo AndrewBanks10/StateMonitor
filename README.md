@@ -6,7 +6,9 @@ StateMonitor allows you to rewind states, single step through states and then se
 
 For state changes made by causality-redux, it also allows you to display the line number and source module where the state change took place.
 
-Simply download it and place it in your source tree. Then include the component StateMonitor in your react tree. In production mode, the monitor is not displayed. See the examples below.
+Simply download it and place it in your source tree. Then include the component StateMonitor in your react tree. In production mode, the monitor is not displayed. 
+
+See the examples below for how to include the component in your source tree.
 ```javascript
 // Typescript project example.
 import { StateMonitor, handleTSSourceMaps } from '../StateMonitor'
