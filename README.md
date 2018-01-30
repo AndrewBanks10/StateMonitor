@@ -47,7 +47,7 @@ Consider using the vscode extension https://github.com/AndrewBanks10/cr-state-fi
 2. Go to vscode and pull up the command palette and select 'react-causality-redux load file'.
 3. Vscode then pulls up the source file that caused the state change with the specific line number that performed the change highlighted.
 
-**Note: I have seen examples where the stack trace in chrome does not produce correct lines numbers. This casues the StateMonitor to not produce correct line numbers also. For example, the below as the last lines of a component controller file will fail to produce correct line numbers.**
+**Note: I have seen examples where the stack trace in chrome does not produce correct lines numbers. This causes the StateMonitor to not produce correct line numbers also. For example, the below as the last lines of a component controller file will fail to produce correct line numbers.**
 ```javascript
 export function initController () {
   return 1
