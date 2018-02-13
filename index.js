@@ -1,7 +1,13 @@
 import * as React from 'react'
+import causalityRedux from 'causality-redux'
 
 // Set this to false to turn off the monitor.
-const showMonitor = true
+let showMonitor = true
+
+if (showMonitor && causalityRedux.store[causalityRedux.globalDataKey].getState()['history']) {
+  alert('The state monitor is not compatible with the react router in time travel history mode.')
+  showMonitor = false
+}
 
 let StateMonitor
 let handleTSSourceMaps

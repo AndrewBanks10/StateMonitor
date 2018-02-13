@@ -7,6 +7,7 @@ import getStackTrace from '../model/callstack'
 import { setIsTypeScript } from '../model/sourcemaps'
 
 export const allStates = []
+let history
 
 //
 // Data for this component.
@@ -164,7 +165,7 @@ export const uiServiceFunctions = {
   },
   setThisState: () => {
     const currentState = monitorMirroredState.currentState
-    if (typeof history.setHistoryState === 'function') {
+    if (typeof history !== 'undefined' && typeof history.setHistoryState === 'function') {
       const state = allStates[currentState].store
       const stack = state[causalityRedux.storeHistoryKey].stack
       if (stack.length === 1 && history.length > 1) {
@@ -181,7 +182,7 @@ export const uiServiceFunctions = {
     setState({isDebugging: false, currentState: -1})
     allStates[currentState].store[stateMonitorPartition] = getState()
     copyStoreState(currentState)
-    if (typeof history.setHistoryState === 'function') {
+    if (typeof history !== 'undefined' && typeof history.setHistoryState === 'function') {
       history.setHistoryState(allStates[currentState].store)
     }
   },
@@ -210,6 +211,14 @@ setTimeout(discloseStates, 1)
 // Set the option to call onStateChange for every causality-redux state change.
 //
 causalityRedux.setOptions({
+  onAddPartition: partitionName => {
+    const state = causalityRedux.store[partitionName].getState()
+    allStates.forEach(e => {
+      if (typeof e.store[partitionName] === 'undefined') {
+        e.store[partitionName] = state
+      }
+    })
+  },
   onStateChange: arg => {
     if (monitorMirroredState.isDebugging) {
       return
